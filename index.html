@@ -4,123 +4,87 @@
   <meta charset="UTF-8">
   <title>Weather App</title>
 
-  <!-- CSS -->
-  <link rel="stylesheet" href="style.css">
-
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #0f172a;
-      color: white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-
-    .app {
-      background: #1e293b;
-      padding: 25px;
-      border-radius: 12px;
-      width: 300px;
       text-align: center;
+      margin-top: 100px;
+      background: #f2f2f2;
     }
 
     input {
-      width: 80%;
-      padding: 8px;
-      margin: 10px 0;
-      border-radius: 5px;
-      border: none;
+      padding: 10px;
+      width: 200px;
     }
 
     button {
-      padding: 8px 15px;
-      border: none;
-      background: #38bdf8;
-      color: black;
+      padding: 10px 20px;
+      margin-left: 10px;
       cursor: pointer;
-      border-radius: 5px;
-      font-weight: bold;
     }
 
-    button:hover {
-      background: #0ea5e9;
-    }
-
-    .result {
-      margin-top: 15px;
-      font-size: 18px;
+    #result {
+      margin-top: 20px;
+      font-size: 20px;
     }
   </style>
 </head>
 
 <body>
 
-  <div class="app">
+  <h1>Weather App 🌤️</h1>
 
-    <h2>🌤 Weather App</h2>
+  <input type="text" id="city" placeholder="Enter city name">
 
-    <input type="text" id="city" placeholder="Enter city">
+  <button onclick="getWeather()">Get Weather</button>
 
-    <br>
-
-    <button onclick="getWeather()">Get Weather</button>
-
-    <div class="result" id="result"></div>
-
-  </div>
+  <div id="result"></div>
 
 
-  <!-- JavaScript -->
   <script>
-
-    const apiKey = "ef0a841111fb8c72d4da6577cf244f44"; // Your API Key
-
+    const apiKey = "ef0a841111fb8c72d4da6577cf244f44";
 
     function getWeather() {
 
       const city = document.getElementById("city").value;
 
       if (city === "") {
-        alert("Please enter city name!");
+        alert("Please enter city name");
         return;
       }
 
       const url =
-        https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric;
+        "https://api.openweathermap.org/data/2.5/weather?q="
+        + city +
+        "&appid=" + apiKey +
+        "&units=metric";
 
 
       fetch(url)
-
         .then(response => response.json())
-
         .then(data => {
 
-          if (data.cod === "404") {
+          if (data.cod !== 200) {
             document.getElementById("result").innerHTML =
-              "❌ City not found";
+              "City not found ❌";
             return;
           }
 
           const temp = data.main.temp;
-          const weather = data.weather[0].main;
-          const name = data.name;
+          const weather = data.weather[0].description;
 
-          document.getElementById("result").innerHTML = 
-            <h3>${name}</h3>
-            🌡 ${temp} °C <br>
-            ☁ ${weather}
-          ;
-        })
-
-        .catch(error => {
           document.getElementById("result").innerHTML =
-            "⚠️ Error fetching data";
-          console.log(error);
-        });
-    }
+            "🌡️ Temp: " + temp + "°C <br>" +
+            "🌥️ Weather: " + weather;
 
+        })
+        .catch(error => {
+          console.log(error);
+          document.getElementById("result").innerHTML =
+            "Error loading data 😢";
+        });
+
+    }
   </script>
 
 </body>
